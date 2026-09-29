@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ADMIN — SISTEM INFORMASI PELACAKAN</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Disclaimer / pemberitahuan simulator -->
+<div id="disclaimer">
+  <div class="disc-box">
+    <div class="disc-head">⚠ PERINGATAN — SIMULATOR EDUKASI</div>
+    <div class="disc-body">
+      <div id="disc-typed"><span id="disc-cursor"></span></div>
+      <div id="disc-after">
+        <div class="disc-credit">
+          <div>DIBUAT OLEH : <b>AYOGI AKBAR</b></div>
+          <div>DIPERSEMBAHKAN UNTUK : <b>POLDA RIAU</b></div>
+        </div>
+        <div class="disc-call">Jika Anda menyaksikan atau menjadi korban tindak kejahatan, segera hubungi <a href="tel:110"><b>📞 110 — POLDA RIAU</b></a></div>
+        <label class="disc-check"><input type="checkbox" id="disc-agree"><span>Saya telah membaca dan memahami pemberitahuan di atas</span></label>
+      </div>
+    </div>
+    <div class="disc-actions"><button id="btn-start" disabled>MULAI APLIKASI ▸</button></div>
+  </div>
+</div>
+
+<!-- Boot splash -->
+<div id="splash">
+  <div class="boot-logo" data-org>POLDA</div>
+  <div class="boot-sub" data-app>SISTEM INFORMASI PELACAKAN</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-status" id="boot-status"></div>
+</div>
+
+<div id="app">
+  <div id="topbar">
+    <div class="logo" data-org>POLDA</div>
+    <div class="title">PANEL ADMINISTRATOR</div>
+    <a class="call-110" href="tel:110">📞 CALL 110 · POLDA RIAU</a>
+    <button id="btn-fullscreen" class="fs-btn" title="Mode Layar Penuh">⛶</button>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+
+  <div id="main">
+    <div id="sidebar">
+      <a class="nav-item" href="index.html"><span class="dot"></span>PELACAKAN</a>
+      <a class="nav-item active"><span class="dot"></span>ADMIN</a>
+      <a class="nav-item" href="index.html"><span class="dot"></span>RESET</a>
+      <div class="version" data-app>SIPOL v3.2.1<br>© 2026 POLDA</div>
+    </div>
+
+    <div id="content">
+      <!-- LOGIN VIEW -->
+      <div class="view active" id="view-login">
+        <div id="login-wrap">
+          <div id="login-box">
+            <div class="login-head">
+              <div class="lh-title">◈ LOGIN ADMINISTRATOR</div>
+              <div class="lh-sub">AKSES TERBATAS · DETAIL TERPROTEKSI</div>
+            </div>
+            <div class="login-body">
+              <div class="field">
+                <label>PASSWORD</label>
+                <input id="login-pass" type="password" placeholder="Masukkan password" autocomplete="off">
+              </div>
+              <button id="btn-login" style="width:100%">LOGIN ▸</button>
+              <div id="login-error">✕ Password salah. Coba lagi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS VIEW -->
+      <div class="view" id="view-settings">
+        <div class="panel-head">
+          <h2>PENGATURAN SISTEM</h2>
+          <span class="tag">ADMIN</span>
+          <span class="status-pill">TERHUBUNG</span>
+        </div>
+        <div class="panel-body">
+          <!-- Branding -->
+          <div class="card">
+            <div class="card-head">BRANDING &amp; TEKS</div>
+            <div class="card-body">
+              <div class="settings-grid">
+                <div class="settings-field">
+                  <label>NAMA INSTANSI (LOGO)</label>
+                  <input type="text" id="cfg-org" placeholder="POLDA">
+                </div>
+                <div class="settings-field">
+                  <label>NAMA APLIKASI</label>
+                  <input type="text" id="cfg-app" placeholder="SISTEM INFORMASI PELACAKAN">
+                </div>
+                <div class="settings-field">
+                  <label>SUB-JUDUL / DIVISI</label>
+                  <input type="text" id="cfg-sub" placeholder="KEPOLISIAN DAERAH RIAU">
+                </div>
+                <div class="settings-field">
+                  <label>TEKS MISSION COMPLETE</label>
+                  <input type="text" id="cfg-mission" placeholder="MISSION COMPLETE">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media uploads -->
+          <div class="card">
+            <div class="card-head">MEDIA &amp; VISUAL</div>
+            <div class="card-body">
+              <div class="settings-grid">
+                <div class="settings-field">
+                  <label>VIDEO ANIMASI MAP</label>
+                  <input type="file" id="up-video" accept="video/*">
+                  <div class="hint">Unggah video zoom map. Diputar otomatis setelah proses pelacakan.</div>
+                  <div class="video-preview" id="pv-video"><video id="pv-video-el" controls></video></div>
+                </div>
+                <div class="settings-field">
+                  <label>FOTO TARGET / PELAKU</label>
+                  <input type="file" id="up-photo" accept="image/*">
+                  <div class="hint">Tampil di kartu hasil pelacakan. Kosongkan = placeholder.</div>
+                  <div class="photo-preview" id="pv-photo"><img id="pv-photo-el" alt="preview"></div>
+                </div>
+                <div class="settings-field">
+                  <label>LOGO INSTANSI (POLDA)</label>
+                  <input type="file" id="up-logo" accept="image/*">
+                  <div class="hint">Tampil di topbar &amp; splash. Kosongkan = teks saja.</div>
+                  <div class="photo-preview" id="pv-logo"><img id="pv-logo-el" alt="preview" style="aspect-ratio:auto"></div>
+                </div>
+              </div>
+              <div class="setting-save-bar" style="margin-top:1rem">
+                <button class="danger" id="btn-del-video">HAPUS VIDEO</button>
+                <button class="danger" id="btn-del-photo">HAPUS FOTO</button>
+                <button class="danger" id="btn-del-logo">HAPUS LOGO</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sound uploads -->
+          <div class="card">
+            <div class="card-head">SOUND EFFECTS</div>
+            <div class="card-body">
+              <div class="settings-grid">
+                <div class="settings-field">
+                  <label>SUARA ALERT (TARGET DITEMUKAN)</label>
+                  <input type="file" id="up-snd-alert" accept="audio/*">
+                  <div class="hint">Mp3/wav. Kosongkan = bunyi bawaan.</div>
+                </div>
+                <div class="settings-field">
+                  <label>SUARA BLIP (PROSES)</label>
+                  <input type="file" id="up-snd-blip" accept="audio/*">
+                  <div class="hint">Mp3/wav. Kosongkan = bunyi bawaan.</div>
+                </div>
+                <div class="settings-field">
+                  <label>SUARA CHIME (SELESAI)</label>
+                  <input type="file" id="up-snd-chime" accept="audio/*">
+                  <div class="hint">Mp3/wav. Kosongkan = bunyi bawaan.</div>
+                </div>
+              </div>
+              <div class="settings-row" style="margin-top:.8rem">
+                <input type="checkbox" id="cfg-sound">
+                <span>AKTIFKAN SOUND EFFECTS</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Behavior + security -->
+          <div class="card">
+            <div class="card-head">PERILAKU &amp; KEAMANAN</div>
+            <div class="card-body">
+              <div class="settings-grid">
+                <div class="settings-row">
+                  <input type="checkbox" id="cfg-autoplay">
+                  <span>AUTOPLAY VIDEO SETELAH LACAK</span>
+                </div>
+                <div class="settings-field">
+                  <label>PASSWORD ADMIN BARU</label>
+                  <input type="password" id="cfg-pass" placeholder="Kosongkan = tidak diubah">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save bar -->
+          <div class="card">
+            <div class="card-body">
+              <div class="setting-save-bar">
+                <button id="btn-save">SIMPAN PENGATURAN</button>
+                <button class="ghost" id="btn-logout">LOGOUT</button>
+                <a href="index.html"><button class="ghost">BUKA PELACAKAN ▸</button></a>
+                <span id="save-msg">✓ TERSIMPAN</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+const ADMIN_KEY = "sipol_admin_ok";
+
+function showSettings() {
+  $("view-login").classList.remove("active");
+  $("view-settings").classList.add("active");
+  $("login-error").style.display = "none";
+  fillForm();
+  preloadPreviews();
+}
+
+function fillForm() {
+  $("cfg-org").value = CONFIG.orgName;
+  $("cfg-app").value = CONFIG.appName;
+  $("cfg-sub").value = CONFIG.subName;
+  $("cfg-mission").value = CONFIG.missionText;
+  $("cfg-sound").checked = CONFIG.soundOn;
+  $("cfg-autoplay").checked = CONFIG.autoplay;
+}
+
+async function preloadPreviews() {
+  const vb = await idb.get(MEDIA.VIDEO);
+  if (vb) {
+    $("pv-video").classList.add("active");
+    $("pv-video-el").src = URL.createObjectURL(vb);
+  }
+  const pb = await idb.get(MEDIA.PHOTO);
+  if (pb) {
+    $("pv-photo").classList.add("active");
+    $("pv-photo-el").src = URL.createObjectURL(pb);
+  }
+  const lb = await idb.get(MEDIA.LOGO);
+  if (lb) {
+    $("pv-logo").classList.add("active");
+    $("pv-logo-el").src = URL.createObjectURL(lb);
+  }
+}
+
+async function uploadMedia(key, fileInput, previewEl, elId) {
+  const f = fileInput.files[0];
+  if (!f) return;
+  await idb.set(key, f);
+  if (previewEl && elId) {
+    previewEl.classList.add("active");
+    $(elId).src = URL.createObjectURL(f);
+  }
+  clearMediaUrlCache();
+  flashSave();
+}
+
+function flashSave() {
+  const m = $("save-msg");
+  m.classList.add("active");
+  setTimeout(() => m.classList.remove("active"), 2000);
+}
+
+/* Login */
+function tryLogin() {
+  const v = $("login-pass").value;
+  if (v === CONFIG.password) {
+    sessionStorage.setItem(ADMIN_KEY, "1");
+    showSettings();
+  } else {
+    $("login-error").style.display = "block";
+    $("login-pass").value = "";
+  }
+}
+
+$("btn-login").addEventListener("click", tryLogin);
+$("login-pass").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") tryLogin();
+});
+
+/* Uploads */
+$("up-video").addEventListener("change", () =>
+  uploadMedia(MEDIA.VIDEO, $("up-video"), $("pv-video"), "pv-video-el"));
+$("up-photo").addEventListener("change", () =>
+  uploadMedia(MEDIA.PHOTO, $("up-photo"), $("pv-photo"), "pv-photo-el"));
+$("up-logo").addEventListener("change", () =>
+  uploadMedia(MEDIA.LOGO, $("up-logo"), $("pv-logo"), "pv-logo-el"));
+$("up-snd-alert").addEventListener("change", () =>
+  uploadMedia(MEDIA.SND_ALERT, $("up-snd-alert"), null, null));
+$("up-snd-blip").addEventListener("change", () =>
+  uploadMedia(MEDIA.SND_BLIP, $("up-snd-blip"), null, null));
+$("up-snd-chime").addEventListener("change", () =>
+  uploadMedia(MEDIA.SND_CHIME, $("up-snd-chime"), null, null));
+
+/* Delete media */
+$("btn-del-video").addEventListener("click", async () => {
+  await idb.del(MEDIA.VIDEO);
+  $("pv-video").classList.remove("active");
+  clearMediaUrlCache();
+  flashSave();
+});
+$("btn-del-photo").addEventListener("click", async () => {
+  await idb.del(MEDIA.PHOTO);
+  $("pv-photo").classList.remove("active");
+  clearMediaUrlCache();
+  flashSave();
+});
+$("btn-del-logo").addEventListener("click", async () => {
+  await idb.del(MEDIA.LOGO);
+  $("pv-logo").classList.remove("active");
+  clearMediaUrlCache();
+  flashSave();
+});
+
+/* Save settings */
+$("btn-save").addEventListener("click", () => {
+  CONFIG.orgName = $("cfg-org").value.trim() || DEFAULT_CONFIG.orgName;
+  CONFIG.appName = $("cfg-app").value.trim() || DEFAULT_CONFIG.appName;
+  CONFIG.subName = $("cfg-sub").value.trim() || DEFAULT_CONFIG.subName;
+  CONFIG.missionText = $("cfg-mission").value.trim() || DEFAULT_CONFIG.missionText;
+  CONFIG.soundOn = $("cfg-sound").checked;
+  CONFIG.autoplay = $("cfg-autoplay").checked;
+  const np = $("cfg-pass").value;
+  if (np) CONFIG.password = np;
+  saveConfig();
+  applyBranding();
+  $("cfg-pass").value = "";
+  flashSave();
+});
+
+/* Logout */
+$("btn-logout").addEventListener("click", () => {
+  sessionStorage.removeItem(ADMIN_KEY);
+  $("view-settings").classList.remove("active");
+  $("view-login").classList.add("active");
+  $("login-pass").value = "";
+  $("login-error").style.display = "none";
+});
+
+/* Boot */
+/* Disclaimer gate — setuju dulu sebelum app jalan */
+function initDisclaimer() {
+  const cb = $("disc-agree");
+  const btn = $("btn-start");
+  const box = $("disclaimer");
+  if (!cb || !btn || !box) return;
+  typeDisclaimer();
+  cb.addEventListener("change", () => { btn.disabled = !cb.checked; });
+  btn.addEventListener("click", () => {
+    if (!cb.checked) return;
+    box.classList.add("hidden");
+    sipolInit(() => {
+      if (sessionStorage.getItem(ADMIN_KEY) === "1") showSettings();
+    });
+  });
+}
+initDisclaimer();
+</script>
+</body>
+</html>

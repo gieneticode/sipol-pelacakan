@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SISTEM INFORMASI PELACAKAN — POLDA</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Disclaimer / pemberitahuan simulator -->
+<div id="disclaimer">
+  <div class="disc-box">
+    <div class="disc-head">⚠ PERINGATAN — SIMULATOR EDUKASI</div>
+    <div class="disc-body">
+      <div id="disc-typed"><span id="disc-cursor"></span></div>
+      <div id="disc-after">
+        <div class="disc-credit">
+          <div>DIBUAT OLEH : <b>AYOGI AKBAR</b></div>
+          <div>DIPERSEMBAHKAN UNTUK : <b>POLDA RIAU</b></div>
+        </div>
+        <div class="disc-call">Jika Anda menyaksikan atau menjadi korban tindak kejahatan, segera hubungi <a href="tel:110"><b>📞 110 — POLDA RIAU</b></a></div>
+        <label class="disc-check"><input type="checkbox" id="disc-agree"><span>Saya telah membaca dan memahami pemberitahuan di atas</span></label>
+      </div>
+    </div>
+    <div class="disc-actions"><button id="btn-start" disabled>MULAI APLIKASI ▸</button></div>
+  </div>
+</div>
+
+<!-- Boot splash -->
+<div id="splash">
+  <div class="boot-logo-area">
+    <img class="org-logo" alt="">
+    <div class="boot-logo" data-org>POLDA</div>
+  </div>
+  <div class="boot-sub" data-app>SISTEM INFORMASI PELACAKAN</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <div class="boot-status" id="boot-status"></div>
+</div>
+
+<div id="app">
+  <!-- ============ TOPBAR ============ -->
+  <div id="topbar">
+    <div class="logo-area">
+      <img class="org-logo" alt="">
+      <div class="logo" data-org>POLDA</div>
+    </div>
+    <div class="title" data-sub>KEPOLISIAN DAERAH RIAU</div>
+    <a class="call-110" href="tel:110">📞 CALL 110 · POLDA RIAU</a>
+    <button id="btn-fullscreen" class="fs-btn" title="Mode Layar Penuh">⛶</button>
+    <div class="top-right">
+      <div id="signal-bars">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN GRID ============ -->
+  <div id="main">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <a class="nav-item active"><span class="dot"></span>PELACAKAN</a>
+      <a class="nav-item" href="admin.html"><span class="dot"></span>ADMIN</a>
+      <a class="nav-item" id="nav-reset"><span class="dot"></span>RESET</a>
+      <div class="version" data-app>SIPOL v3.2.1<br>© 2026 POLDA</div>
+    </div>
+
+    <!-- LEFT: mission log -->
+    <section class="panel panel-log" id="panel-log">
+      <div class="panel-head">
+        <h2>MISSION LOG</h2>
+        <span class="tag">LIVE</span>
+      </div>
+      <div class="panel-body">
+        <div id="log-box"><div class="info"><span class="ts">[--:--:--]</span>Sistem siap. Masukkan nama target.</div></div>
+        <div class="progress-bar"><div class="progress-fill" id="log-progress"></div></div>
+        <div class="progress-label"><span id="pct-label">0%</span><span>PROSES</span></div>
+      </div>
+    </section>
+
+    <!-- CENTER: map / video stage -->
+    <section class="panel panel-map" id="panel-map">
+      <div class="panel-head">
+        <h2>VISUAL PELACAKAN — SATELIT</h2>
+        <span class="tag" id="map-mode">STANDBY</span>
+      </div>
+      <div id="video-stage">
+        <video id="map-video" playsinline></video>
+        <div id="video-empty">
+          <div class="icon">▶</div>
+          <p>Citra satelit belum dimuat.<br>
+             Hubungi <b>ADMIN</b> untuk konfigurasi data intelijen.</p>
+          <a href="admin.html"><button class="ghost">BUKA ADMIN</button></a>
+        </div>
+
+        <!-- hacker overlays -->
+        <div class="map-grid"></div>
+        <div class="map-scan"></div>
+        <div class="map-corners"><i></i><i></i><i></i><i></i></div>
+        <div id="crosshair"><span class="ch-dot"></span></div>
+        <div id="radar-ping"><span></span><span></span><span></span></div>
+        <div id="glitch-lock" class="glitch" data-text="◈ TARGET LOCKED">◈ TARGET LOCKED</div>
+
+        <div id="video-hud">
+          <div>MODE: PELACAKAN VISUAL</div>
+          <div class="red" id="video-hud-target">TARGET: —</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: target intel -->
+    <section class="panel panel-intel" id="panel-intel">
+      <div class="panel-head">
+        <h2>INTEL TARGET</h2>
+        <span class="tag" id="intel-status">MENUNGGU</span>
+      </div>
+      <div class="panel-body">
+        <div class="target-photo" id="target-photo-box">
+          <div class="photo-placeholder">👤</div>
+          <div class="photo-label">FOTO TARGET</div>
+        </div>
+        <div class="data-rows">
+          <div class="data-row"><span class="k">NAMA</span><span class="v red" id="info-name">—</span></div>
+          <div class="data-row"><span class="k">NIK</span><span class="v" id="info-nik">—</span></div>
+          <div class="data-row"><span class="k">TGL LAHIR</span><span class="v" id="info-dob">—</span></div>
+          <div class="data-row"><span class="k">PEKERJAAN</span><span class="v" id="info-job">—</span></div>
+          <div class="data-row"><span class="k">ALAMAT</span><span class="v" id="info-addr">—</span></div>
+          <div class="data-row"><span class="k">NO TELEPON</span><span class="v" id="info-phone">—</span></div>
+          <div class="data-row"><span class="k">ID PELACAKAN</span><span class="v" id="info-id">—</span></div>
+          <div class="data-row"><span class="k">WAKTU DETEKSI</span><span class="v" id="info-time">—</span></div>
+          <div class="data-row"><span class="k">STATUS</span><span class="v green" id="info-status">STANDBY</span></div>
+        </div>
+        <button id="btn-lacak" class="intel-cta">▸ MULAI PELACAKAN</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Mission complete bar -->
+  <div id="mission-complete">
+    <span class="mc-text" id="mc-text">✓ MISSION COMPLETE</span>
+  </div>
+
+  <!-- ============ STATUS BAR ============ -->
+  <div id="statusbar">
+    <span class="sb-item"><span class="sb-dot"></span>SISTEM ONLINE</span>
+    <span class="sb-item mono" id="coords-readout">LAT -6.208800 LON 106.845600</span>
+    <span class="sb-item">SINYAL: <b id="signal-pct">98%</b></span>
+    <span class="sb-item rec"><span class="rec-dot"></span>REC</span>
+    <span class="sb-item mono" id="sb-clock">--:--:--</span>
+  </div>
+</div>
+
+<!-- Input popup modal -->
+<div id="input-modal">
+  <div class="modal-box">
+    <div class="modal-head">◉ INPUT TARGET</div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <div class="field-label">NAMA TARGET</div>
+        <input id="target-input" type="text" placeholder="Masukkan Nama Target" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="modal-field">
+        <div class="field-label">NIK</div>
+        <input id="target-nik" type="text" inputmode="numeric" placeholder="1471 •••• •••• 0003" autocomplete="off" spellcheck="false" maxlength="19">
+      </div>
+      <div class="modal-actions">
+        <button class="ghost" id="btn-cancel">BATAL</button>
+        <button id="btn-lacak-modal">LACAK ▸</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+const STEPS = [
+  { msg: "Inisialisasi modul pelacakan...", wait: 400 },
+  { msg: "Mengakses database kependudukan pusat...", wait: 650 },
+  { msg: "Pencocokan data biometrik target...", wait: 650 },
+  { msg: "Verifikasi NIK dan identitas...", wait: 600, cls: "hl" },
+  { msg: "Mengaktifkan triangulasi sinyal seluler...", wait: 550 },
+  { msg: "Mengkalibrasi citra satelit wilayah target...", wait: 500 },
+];
+
+let tracking = false;
+const video = $("map-video");
+
+function log(msg, cls = "info") {
+  const box = $("log-box");
+  const line = document.createElement("div");
+  line.className = cls;
+  line.innerHTML = `<span class="ts">[${fmtTime()}]</span>${msg}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+function openInput() {
+  $("input-modal").classList.add("active");
+$("target-input").value = "";
+  $("target-nik").value = "";
+  setTimeout(() => $("target-input").focus(), 100);
+}
+
+function closeInput() {
+  const m = $("input-modal");
+  m.classList.add("leaving");
+  setTimeout(() => { m.classList.remove("active", "leaving"); }, 300);
+}
+
+async function loadVideoFromDB() {
+  const blob = await idb.get(MEDIA.VIDEO);
+  if (blob) {
+    if (video.src) { try { URL.revokeObjectURL(video.src); } catch (e) {} }
+    video.src = URL.createObjectURL(blob);
+    video.load();
+    $("video-empty").classList.remove("active");
+    return true;
+  }
+  $("video-empty").classList.add("active");
+  return false;
+}
+
+video.addEventListener("ended", onVideoEnded);
+
+function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+/* Map stage mode + hacker overlays */
+function setMapMode(mode) {
+  const stage = $("video-stage");
+  $("map-mode").textContent = mode;
+  stage.classList.toggle("tracking", mode === "TRACKING" || mode === "LOCKED");
+  stage.classList.toggle("locked", mode === "LOCKED");
+}
+
+async function startTracking() {
+  if (tracking) return;
+  const raw = $("target-input").value.trim();
+  if (!raw) {
+    log("ERROR: Masukkan nama target terlebih dahulu.", "warn");
+    sndAlert();
+    return;
+  }
+  const name = raw.toUpperCase();
+  startTracking._name = name;
+  tracking = true;
+  initAudio();
+  sndBlip(660);
+
+  closeInput();
+  $("btn-lacak").disabled = true;
+  $("mission-complete").classList.remove("active");
+  $("log-box").innerHTML = "";
+  $("log-progress").style.width = "0%";
+  $("intel-status").textContent = "MENCARI";
+  $("info-status").textContent = "DALAM PROSES";
+  $("info-status").className = "v amber";
+
+  log(`Input diterima: <b>${escapeHtml(name)}</b>`, "hl");
+  await sleep(300);
+
+  for (let i = 0; i < STEPS.length; i++) {
+    const s = STEPS[i];
+    log(s.msg, s.cls || "ok");
+    sndBlip(1000 + i * 140);
+    const pct = Math.round(((i + 1) / STEPS.length) * 100);
+    $("log-progress").style.width = pct + "%";
+    $("pct-label").textContent = pct + "%";
+    await sleep(s.wait);
+  }
+
+  log("Data terverifikasi. Memulai visual pelacakan...", "hl");
+  sndChime();
+  setMapMode("TRACKING");
+
+  $("video-hud").classList.add("active");
+  $("video-hud-target").textContent = "TARGET: " + name;
+
+  const hasVideo = await loadVideoFromDB();
+  if (hasVideo && CONFIG.autoplay) {
+    video.currentTime = 0;
+    // pastikan video siap sebelum play (mobile browser)
+    if (video.readyState < 2) {
+      await new Promise((res) => {
+        const done = () => { video.removeEventListener("loadeddata", done); res(); };
+        video.addEventListener("loadeddata", done);
+        setTimeout(res, 3000);
+      });
+    }
+    try { await video.play(); } catch (e) {}
+    log("Menjangkau titik koordinat target. Menunggu konfirmasi lock...", "info");
+    /* WATCHDOG: video macet (autoplay diblokir/codec tak didukung) -> tetap lanjut ke LOCKED */
+    {
+      const t0 = Date.now();
+      const maxMs = 15000;
+      const wd = setInterval(() => {
+        const el = Date.now() - t0;
+        const stuck = video.paused && !video.ended;
+        if (video.ended || el >= maxMs || (el > 6000 && stuck)) {
+          clearInterval(wd);
+          if (!video.ended) { try { video.pause(); } catch (e) {} }
+          onVideoEnded();
+        }
+      }, 500);
+    }
+  } else if (hasVideo) {
+    log("Menunggu konfirmasi operator untuk memulai pelacakan...", "info");
+  } else {
+    log("Citra satelit tidak tersedia. Melanjutkan triangulasi sinyal...", "warn");
+    await sleep(2000);
+    onVideoEnded();
+  }
+}
+
+async function onVideoEnded() {
+  if (!tracking) return;
+  const name = (startTracking._name || $("target-input").value.trim() || "TARGET").toUpperCase();
+  const nikRaw = (typeof nikReal === "string" && nikReal) ? nikReal : $("target-nik").value.trim().replace(/\D/g, "");
+  const nik = nikRaw.length >= 6 ? nikRaw.padEnd(16, "0") : generateNIK(name);
+  const nikSensor = sensorNIK(nik);
+  const ttl = ttlFromNIK(nik);
+  const alamat = alamatFromNIK(nik);
+  const pekerjaan = pekerjaanFromNIK(nik);
+  const phone = phoneFromNIK(nik);
+
+  setMapMode("LOCKED");
+  log("LOCK terkonfirmasi. Data target teridentifikasi.", "hl");
+  sndAlert();
+
+  // glitch lock flash
+  const gl = $("glitch-lock");
+  gl.classList.add("active");
+  setTimeout(() => gl.classList.remove("active"), 2400);
+
+  // radar ping
+  $("radar-ping").classList.add("active");
+
+  // Photo
+  const photoBox = $("target-photo-box");
+  const photoBlob = await idb.get(MEDIA.PHOTO);
+  if (photoBlob) {
+    photoBox.innerHTML =
+      `<img src="${URL.createObjectURL(photoBlob)}" alt="foto target">` +
+      `<div class="photo-label">FOTO TARGET</div>`;
+  } else {
+    photoBox.innerHTML =
+      `<div class="photo-placeholder">👤</div>` +
+      `<div class="photo-label">FOTO TARGET</div>`;
+  }
+
+  $("info-name").textContent = name;
+  $("info-nik").textContent = nikSensor;
+  $("info-dob").textContent = ttl;
+  $("info-job").textContent = pekerjaan;
+  $("info-addr").textContent = alamat;
+  $("info-phone").textContent = phone;
+  $("info-id").textContent = "PLD-" + new Date().getFullYear() + "-" +
+    String(Math.abs(nik.charCodeAt(0) * 7919) % 9000 + 1000);
+  $("info-time").textContent = fmtTimestamp();
+  $("info-status").textContent = "TERIDENTIFIKASI";
+  $("info-status").className = "v green";
+  $("intel-status").textContent = "TERIDENTIFIKASI";
+  $("mc-text").textContent = "✓ " + CONFIG.missionText;
+
+  setTimeout(() => {
+    $("mission-complete").classList.add("active");
+    sndChime();
+    tracking = false;
+    $("btn-lacak").disabled = false;
+    log(`Proses pelacakan selesai. STATUS: ${CONFIG.missionText}.`, "ok");
+    startAlarmLoop();
+  }, 1200);
+}
+
+function reset() {
+  tracking = false;
+  stopAlarmLoop();
+  $("btn-lacak").disabled = false;
+  $("mission-complete").classList.remove("active");
+  $("video-hud").classList.remove("active");
+  $("radar-ping").classList.remove("active");
+  setMapMode("STANDBY");
+  video.pause();
+  video.currentTime = 0;
+  $("log-box").innerHTML = '<div class="info"><span class="ts">[--:--:--]</span>Sistem siap. Masukkan nama target.</div>';
+  $("log-progress").style.width = "0%";
+  $("pct-label").textContent = "0%";
+  $("intel-status").textContent = "MENUNGGU";
+  $("info-name").textContent = "—";
+  $("info-nik").textContent = "—";
+  $("info-id").textContent = "—";
+  $("info-time").textContent = "—";
+  $("info-status").textContent = "STANDBY";
+  $("info-status").className = "v green";
+  $("info-dob").textContent = "—";
+  $("info-addr").textContent = "—";
+  $("info-job").textContent = "—";
+  $("info-phone").textContent = "—";
+  $("target-nik").value = "";
+  nikReal = "";
+  $("target-photo-box").innerHTML =
+    `<div class="photo-placeholder">👤</div>` +
+    `<div class="photo-label">FOTO TARGET</div>`;
+  sndBlip(440);
+}
+
+/* Coords ticker — fake drift around target */
+let lat = -6.2088, lon = 106.8456;
+setInterval(() => {
+  lat += (Math.random() - 0.5) * 0.0004;
+  lon += (Math.random() - 0.5) * 0.0004;
+  $("coords-readout").textContent =
+    `LAT ${lat.toFixed(6)} LON ${lon.toFixed(6)}`;
+  $("signal-pct").textContent = (94 + Math.floor(Math.random() * 6)) + "%";
+}, 1500);
+
+/* Status bar clock */
+setInterval(() => { $("sb-clock").textContent = fmtTime(); }, 1000);
+
+$("btn-lacak").addEventListener("click", openInput);
+$("btn-lacak-modal").addEventListener("click", startTracking);
+$("target-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") startTracking();
+});
+
+/* NIK sensor real-time ala paspor: 4-4-4-4, tengah dibintangi */
+let nikReal = "";
+$("target-nik").addEventListener("beforeinput", (e) => {
+  const t = e.target;
+  if (e.inputType === "deleteContentBackward" || e.inputType === "deleteContentForward") nikReal = nikReal.slice(0, -1);
+  else if (e.data && /\d/.test(e.data) && nikReal.length < 16) nikReal += e.data;
+  else if (e.inputType === "insertText" && e.data) return;
+});
+$("target-nik").addEventListener("input", () => {
+  const A = 4, B = nikReal.length <= 6 ? 0 : 2;
+  const masked = nikReal.split("").map((c, i) => (i < A || i >= nikReal.length - B) ? c : "•");
+  const grp = [];
+  for (let i = 0; i < masked.length; i += 4) grp.push(masked.slice(i, i + 4).join(""));
+  $("target-nik").value = grp.join(" ");
+});
+$("btn-cancel").addEventListener("click", closeInput);
+
+/* Nav reset — hamburger di sidebar, bukan di mission overlay */
+$("nav-reset").addEventListener("click", reset);
+
+/* Logo loader */
+async function loadLogo() {
+  const blob = await idb.get(MEDIA.LOGO);
+  if (blob) {
+    const url = URL.createObjectURL(blob);
+    document.querySelectorAll(".org-logo").forEach((img) => {
+      img.src = url;
+      img.classList.add("active");
+    });
+  }
+}
+
+/* Boot */
+/* Disclaimer gate — setuju dulu sebelum app jalan */
+function initDisclaimer() {
+  const cb = $("disc-agree");
+  const btn = $("btn-start");
+  const box = $("disclaimer");
+  if (!cb || !btn || !box) return;
+  typeDisclaimer();
+  cb.addEventListener("change", () => { btn.disabled = !cb.checked; });
+  btn.addEventListener("click", () => {
+    if (!cb.checked) return;
+    box.classList.add("hidden");
+    sipolInit(async () => {
+      await loadVideoFromDB();
+      await loadLogo();
+      setMapMode("STANDBY");
+      setTimeout(openInput, 400);
+    });
+  });
+}
+initDisclaimer();
+</script>
+</body>
+</html>
